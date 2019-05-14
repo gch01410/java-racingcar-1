@@ -5,26 +5,20 @@ import domain.WinnerCars;
 import view.InputView;
 import view.OutputView;
 
-public class Application {
-    private static GameProgressService gameProgressService;
+import java.util.List;
 
+public class Application {
     public static void main(String[] args) {
         run();
     }
 
     private static void run() {
-        GameResult gameResult = initGame();
+        List<String> names = InputView.inputNames();
+        int gameRound = InputView.inputRound();
 
-        race(gameResult, InputView.inputRound());
-        completeGame(gameResult);
-    }
+        GameProgressService gameProgressService = new GameProgressService(new RandomNumberStrategy(), names);
+        GameResult gameResult = null;
 
-    private static GameResult initGame() {
-        gameProgressService = new GameProgressService(new RandomNumberStrategy());
-        return gameProgressService.initGameResult(InputView.inputNames());
-    }
-
-    private static void race(GameResult gameResult, int gameRound) {
         System.out.println("실행 결과");
 
         for (int i = 1; i <= gameRound; i++) {
@@ -32,9 +26,7 @@ public class Application {
             OutputView.printPosition(gameResult);
             System.out.println();
         }
-    }
 
-    private static void completeGame(GameResult gameResult) {
         WinnerCars winnerCars = new WinnerCars(gameResult.getWinners());
         OutputView.printWinners(winnerCars);
     }

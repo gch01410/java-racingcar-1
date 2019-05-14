@@ -5,28 +5,28 @@ import java.util.List;
 
 public class GameProgressService {
     private GameMovingStrategy strategy;
+    private List<Car> cars;
 
-    public GameProgressService(GameMovingStrategy strategy) {
+    public GameProgressService(GameMovingStrategy strategy, List<String> names) {
         this.strategy = strategy;
-    }
-
-    public GameResult initGameResult(List<String> names) {
-        List<Car> cars = new ArrayList<>();
+        cars = new ArrayList<>();
 
         for (String name : names) {
             cars.add(new Car(name));
         }
-
-        return new GameResult(cars);
     }
 
     public GameResult raceByRound(GameResult gameResult) {
-        List<Car> cars = gameResult.getCars();
+        List<Car> racingCars = cars;
 
-        for (Car car : cars) {
+        if (gameResult != null) {
+            racingCars = gameResult.getCars();
+        }
+
+        for (Car car : racingCars) {
             car.move(strategy.getMovingNum());
         }
 
-        return new GameResult(cars);
+        return new GameResult(racingCars);
     }
 }
